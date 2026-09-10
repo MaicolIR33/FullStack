@@ -7,19 +7,24 @@ process.env.DB_USER = 'test';
 process.env.DB_PASSWORD = 'test';
 process.env.NODE_ENV = 'test';
 
-const { validId, validUser } = await import('../src/index.js');
+const { validId, validTask, validTaskUpdate } = await import('../src/index.js');
 
-test('acepta un usuario válido y normaliza su correo', () => {
-  assert.deepEqual(validUser({ name: ' Ada ', email: ' ADA@Example.COM ' }), { name: 'Ada', email: 'ada@example.com' });
+test('acepta una tarea válida y elimina espacios innecesarios', () => {
+  assert.deepEqual(validTask({ title: '  Configurar Docker  ' }), { title: 'Configurar Docker' });
 });
 
-test('rechaza usuarios incompletos o con correo inválido', () => {
-  assert.equal(validUser({ name: '', email: 'ada@example.com' }), null);
-  assert.equal(validUser({ name: 'Ada', email: 'sin-correo' }), null);
+test('rechaza tareas sin título o que exceden la longitud permitida', () => {
+  assert.equal(validTask({ title: '' }), null);
+  assert.equal(validTask({ title: ' '.repeat(8) }), null);
+  assert.equal(validTask({ title: 'a'.repeat(256) }), null);
 });
 
-test('acepta solo identificadores positivos enteros', () => {
-  assert.equal(validId('4'), 4);
+test('valida el identificador y los datos de actualización', () => {
+  assert.equal(validId('3'), 3);
   assert.equal(validId('0'), null);
-  assert.equal(validId('4.5'), null);
+  assert.deepEqual(
+    validTaskUpdate({ title: '  Actualizar API ', completed: true }),
+    { title: 'Actualizar API', completed: true },
+  );
+  assert.equal(validTaskUpdate({ title: 'Actualizar API' }), null);
 });

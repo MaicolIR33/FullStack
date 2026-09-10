@@ -1,13 +1,22 @@
-CREATE TABLE IF NOT EXISTS users (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(150) NOT NULL,
+CREATE DATABASE IF NOT EXISTS app_db;
+USE app_db;
+
+CREATE TABLE IF NOT EXISTS task (
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  completed BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY users_email_unique (email)
+  PRIMARY KEY (id)
 );
 
-INSERT INTO users (name, email) VALUES
-  ('Ada Lovelace', 'ada@example.com'),
-  ('Alan Turing', 'alan@example.com')
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+INSERT INTO task (title)
+SELECT 'realizar proyecto'
+WHERE NOT EXISTS (SELECT 1 FROM task WHERE title = 'realizar proyecto');
+
+INSERT INTO task (title)
+SELECT 'hacer commits'
+WHERE NOT EXISTS (SELECT 1 FROM task WHERE title = 'hacer commits');
+
+INSERT INTO task (title)
+SELECT 'configurar CD'
+WHERE NOT EXISTS (SELECT 1 FROM task WHERE title = 'configurar CD');
