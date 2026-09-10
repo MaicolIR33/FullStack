@@ -1,33 +1,35 @@
-# Ejercicio Full Stack con Docker
+# Actividad Full Stack Docker
 
-Implementación independiente del ejercicio: frontend estático, API en Express y MySQL, todo coordinado por Docker Compose.
+Aplicación de tareas construida con Astro y React en el frontend, Express en el backend y MySQL como base de datos. Docker Compose inicia los tres servicios y Nginx dirige las llamadas `/api` hacia la API.
 
-## Servicios
+## Requisitos incluidos
 
-| Servicio | Puerto | Función |
-| --- | --- | --- |
-| Frontend | 8080 | Interfaz para crear, listar, editar y eliminar usuarios |
-| Backend | 3000 | API REST (`GET`, `POST`, `PUT`, `DELETE /api/users`; `/api/health`) |
-| MySQL | interno | Persistencia de usuarios |
+- `GET /api/health`: confirma la conexión con MySQL.
+- `GET /api/tasks`: lista las tareas desde la tabla `task`.
+- `POST /api/tasks`: crea una tarea a partir de `{ "title": "..." }`.
+- `PUT /api/tasks/:id`: actualiza el título y estado de una tarea.
+- `DELETE /api/tasks/:id`: elimina una tarea existente.
+- MySQL inicializa `app_db`, la tabla `task` y las tareas de ejemplo solicitadas.
+- Frontend Astro/React que consulta y crea tareas mediante la API.
+- Dockerfiles multi-etapa, proxy Nginx, healthchecks y flujo de integración continua.
 
-## Ejecutar en VS Code
+## Ejecutar
 
-1. Abre la carpeta `fullstack-docker` en VS Code.
-2. Copia `.env.example` a `.env` y cambia las claves antes de una entrega real.
+1. Abre esta carpeta (`fullstack-docker`) en la terminal.
+2. Copia `.env.example` como `.env` y cambia las contraseñas para cualquier uso distinto a desarrollo local.
 3. Ejecuta `docker compose up --build`.
-4. Abre `http://localhost:8080`.
+4. Abre [http://localhost:8080](http://localhost:8080).
 
-Para detenerlo: `docker compose down`. Para eliminar también los datos locales: `docker compose down -v`.
+Para detener los servicios usa `docker compose down`. Para eliminar también los datos locales de MySQL usa `docker compose down -v`.
 
-## Entregables incluidos
+## Puertos
 
-- Backend Express con CORS, variables de entorno, pool MySQL y CRUD completo de usuarios.
-- Frontend HTML/CSS/JavaScript conectado a la API por el proxy de Nginx.
-- Inicialización de tabla y registros de ejemplo en MySQL.
-- Dockerfiles para frontend y backend, y `docker-compose.yml` para los tres servicios.
-- Flujo de GitHub Actions que prueba el backend, construye los servicios y verifica la API en cada push y pull request.
+| Servicio | Puerto | Uso |
+| --- | --- | --- |
+| Frontend | 8080 | Interfaz de tareas y proxy `/api` |
+| Backend | 3000 | API Express |
+| MySQL | Interno | Persistencia de tareas |
 
-## Endpoints adicionales
+## Variables de entorno
 
-- `GET /api/users/:id`: consulta un usuario por identificador.
-- `GET /api/users/stats`: entrega el total actual de usuarios.
+La plantilla `.env.example` documenta las variables que Docker Compose utiliza. El archivo `.env` está ignorado por Git y no debe versionarse.
