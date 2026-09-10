@@ -1,0 +1,13 @@
+name: Validar proyecto Full Stack
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir los servicios
+        run: docker compose -f fullstack-docker/docker-compose.yml build
