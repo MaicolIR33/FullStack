@@ -26,3 +26,8 @@ Para detenerlo: `docker compose down`. Para eliminar también los datos locales:
 - Inicialización de tabla y registros de ejemplo en MySQL.
 - Dockerfiles para frontend y backend, y `docker-compose.yml` para los tres servicios.
 - Flujo de GitHub Actions que prueba el backend, construye los servicios y verifica la API en cada push y pull request.
+
+## Endpoints adicionales
+
+- `GET /api/users/:id`: consulta un usuario por identificador.
+- `GET /api/users/stats`: entrega el total actual de usuarios.
