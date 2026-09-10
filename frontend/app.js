@@ -1,6 +1,7 @@
 const form = document.querySelector('#user-form');
 const list = document.querySelector('#user-list');
 const message = document.querySelector('#message');
+const userCount = document.querySelector('#user-count');
 const idInput = document.querySelector('#user-id');
 const submitButton = document.querySelector('#submit-button');
 const cancelButton = document.querySelector('#cancel-button');
@@ -31,7 +32,8 @@ async function request(url, options) {
 
 async function loadUsers() {
   try {
-    const users = await request('/api/users');
+    const [users, stats] = await Promise.all([request('/api/users'), request('/api/users/stats')]);
+    userCount.textContent = `${stats.total} usuario${stats.total === 1 ? '' : 's'} registrado${stats.total === 1 ? '' : 's'}`;
     list.replaceChildren(...users.map((user) => {
       const item = document.createElement('li');
       const details = document.createElement('span');

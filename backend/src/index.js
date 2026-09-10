@@ -49,6 +49,23 @@ app.get('/api/users', async (_request, response, next) => {
   } catch (error) { next(error); }
 });
 
+app.get('/api/users/stats', async (_request, response, next) => {
+  try {
+    const [[stats]] = await pool.query('SELECT COUNT(*) AS total FROM users');
+    response.json({ total: stats.total });
+  } catch (error) { next(error); }
+});
+
+app.get('/api/users/:id', async (request, response, next) => {
+  const id = validId(request.params.id);
+  if (!id) return response.status(400).json({ error: 'Identificador inválido.' });
+  try {
+    const [[user]] = await pool.execute('SELECT id, name, email, created_at FROM users WHERE id = ?', [id]);
+    if (!user) return response.status(404).json({ error: 'Usuario no encontrado.' });
+    response.json(user);
+  } catch (error) { next(error); }
+});
+
 app.post('/api/users', async (request, response, next) => {
   const user = validUser(request.body);
   if (!user) return response.status(400).json({ error: 'Nombre y correo válido son obligatorios.' });
